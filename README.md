@@ -1,1 +1,1 @@
-# prep simple golang projects.
+# simple golang projects.
