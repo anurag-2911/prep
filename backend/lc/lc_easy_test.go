@@ -43,10 +43,7 @@ func findIndexOfFirstOccurence(heystack string, needle string) int {
 	return -1
 }
 
-func removeElement(nums []int, val int) int {
 
-	return 0
-}
 func lengthOfLastWord(s string) int {
 	if len(s) == 0 {
 		return 0
