@@ -45,6 +45,17 @@ func (this *LinkedList) Remove(val int) {
 
 }
 
+func (this *LinkedList) Contains(data int) bool {
+	current := this.Head
+	for current != nil {
+		if current.Data == data {
+			return true
+		}
+		current = current.Next
+	}
+	return false
+}
+
 func TestLinkedList() {
 	ll := &LinkedList{}
 	ll.Append(1)
