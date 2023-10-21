@@ -38,3 +38,32 @@ func FindMiddleElement() *Node {
 
 	return slow
 }
+func hasCycle(head *Node) bool {
+	if(head==nil){
+		return false
+	}
+	slow,fast:=head,head
+	for fast.Next!=nil {
+		slow=slow.Next
+		fast=fast.Next.Next
+		if(slow==fast){
+			return true
+		}
+	}
+	return false
+}
+func TestLinkedListLoop(t *testing.T) {
+	node5 := &Node{5, nil}
+	node4 := &Node{4, node5}
+	node3 := &Node{3, node4}
+	node2 := &Node{2, node3}
+	node1 := &Node{1, node2}
+	fmt.Println(hasCycle(node1))
+	node5.Next=node3
+	fmt.Println(hasCycle(node1))
+
+
+}
+
+
+
