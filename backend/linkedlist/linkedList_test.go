@@ -39,14 +39,14 @@ func FindMiddleElement() *Node {
 	return slow
 }
 func hasCycle(head *Node) bool {
-	if(head==nil){
+	if head == nil {
 		return false
 	}
-	slow,fast:=head,head
-	for fast.Next!=nil {
-		slow=slow.Next
-		fast=fast.Next.Next
-		if(slow==fast){
+	slow, fast := head, head
+	for fast.Next != nil {
+		slow = slow.Next
+		fast = fast.Next.Next
+		if slow == fast {
 			return true
 		}
 	}
@@ -59,11 +59,29 @@ func TestLinkedListLoop(t *testing.T) {
 	node2 := &Node{2, node3}
 	node1 := &Node{1, node2}
 	fmt.Println(hasCycle(node1))
-	node5.Next=node3
+	node5.Next = node3
 	fmt.Println(hasCycle(node1))
 
+}
+func reverseLinkList() *LinkedList {
+	current := linkedlist.Head
+	var revlist LinkedList
+	if current == nil {
+		return nil
+	}
+	arr := make([]int, 0)
+	for current != nil {
+		arr = append(arr, current.Data)
+		current = current.Next
+	}
+	for i := len(arr) - 1; i >= 0; i-- {
+		revlist.Append(arr[i])
+	}
 
+	return &revlist
 }
 
-
-
+func TestRevLinkList(t *testing.T) {
+	ll := reverseLinkList()
+	ll.Traverse()
+}

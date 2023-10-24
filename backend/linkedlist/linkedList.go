@@ -1,5 +1,7 @@
 package linkedlist
 
+import "fmt"
+
 type Node struct {
 	Data int
 	Next *Node
@@ -55,11 +57,40 @@ func (this *LinkedList) Contains(data int) bool {
 	}
 	return false
 }
+func (this *LinkedList) Traverse() {
+	current := this.Head
+	if current == nil {
+		return
+	}
+	for current != nil {
+		fmt.Println(current.Data)
+		current = current.Next
+	}
+}
+func (this *LinkedList) Reverse() {
+	current := this.Head
+	if current == nil {
+		return
+	}
+	var prev *Node = &Node{}
+	prev.Data = this.Head.Data
 
+	for current != nil {
+
+		next := current.Next
+		current.Next = prev
+		prev = current
+		current = next
+
+	}
+	this.Head = prev
+}
 func TestLinkedList() {
 	ll := &LinkedList{}
-	ll.Append(1)
-	ll.Append(2)
-	ll.Append(3)
-	ll.Remove(4)
+	ll.Append(100)
+	ll.Append(200)
+	ll.Append(300)
+	ll.Append(400)
+	ll.Append(500)
+	ll.Traverse()
 }
