@@ -2,6 +2,7 @@ package sysd
 
 import (
 	"fmt"
+	"sync"
 )
 
 func TestKV() {
@@ -24,6 +25,7 @@ func TestKV() {
 
 }
 
+
 type KVP struct {
 	Key   string
 	Value string
@@ -33,6 +35,7 @@ const BucketCount = 10
 
 type XHashTable struct {
 	Buckets [BucketCount][]KVP
+	mu sync.Mutex
 }
 
 func (this *XHashTable) hash(key string) int {
@@ -45,13 +48,15 @@ func (this *XHashTable) hash(key string) int {
 
 // handle collisions by chaining
 func (this *XHashTable) Put(key string, value string) {
+	this.mu.Lock()
+	defer this.mu.Unlock()
 	index := this.hash(key)
 	bucket := &this.Buckets[index]
 
-	for _, bk := range *bucket {
+	for i, bk := range *bucket {
 		if bk.Key == key {
 			//key already exists update the new value
-			bk.Value = value
+			(*bucket)[i].Value = value
 			return
 		}
 	}
@@ -59,6 +64,9 @@ func (this *XHashTable) Put(key string, value string) {
 }
 
 func (this *XHashTable) Get(key string) (string, bool) {
+	this.mu.Lock()
+	defer this.mu.Unlock()
+
 	index := this.hash(key)
 	kvp := this.Buckets[index]
 
@@ -71,6 +79,8 @@ func (this *XHashTable) Get(key string) (string, bool) {
 
 }
 func (this *XHashTable) Delete(key string) {
+	this.mu.Lock()
+	defer this.mu.Unlock()
 	index := this.hash(key)
 	bucket := &this.Buckets[index]
 	for i, k := range *bucket {
