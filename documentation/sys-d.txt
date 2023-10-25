@@ -4,8 +4,11 @@ Design a key-value store in Golang
 
 Requirements of a key-value store and design of the API.
 
-Ensure Scalability and Replication: achieve the scalability using consistent hashing and replicate the partitioned data.
-Versioning Data and Achieving Configurability: resolve the conflicts that occur due to changes made by more than one entity, and make the system more configurable for different use cases.
-Enable Fault Tolerance and Failure Detection: make the key-value store fault tolerant and detect failures in the system.
+1.Ensure Scalability and Replication: achieve the scalability using consistent hashing and replicate the partitioned data.
+2.Versioning Data and Achieving Configurability: resolve the conflicts that occur due to changes made by more than one entity, 
+  and make the system more configurable for different use cases.
+3.Enable Fault Tolerance and Failure Detection: make the key-value store fault tolerant and detect failures in the system.
+
+
 
 
