@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:alpine
+        ports:
+        - containerPort: 6379
+        resources:
+          requests:
+            memory: "64Mi"  # Minimum amount of memory guaranteed to the container
+            cpu: "250m"     # Minimum amount of CPU guaranteed to the container (1/4 of a CPU core)
+          limits:
+            memory: "128Mi" # Maximum amount of memory the container can use
+            cpu: "500m"     # Maximum amount of CPU the container can use (1/2 of a CPU core)

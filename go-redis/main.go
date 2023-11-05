@@ -3,10 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/go-redis/redis/v8"
 	"log"
 	"os"
-
-	"github.com/go-redis/redis/v8"
+	"time"
 )
 
 var ctx = context.Background()
@@ -30,6 +30,20 @@ func main() {
 			DB:       0,                    // use default DB
 		})
 
+	const maxRetries = 5
+	const baseDelay = time.Second
+	for i := 0; i < maxRetries; i++ {
+		err = rdb.Ping(ctx).Err()
+		if err == nil {
+			break
+		}
+		fmt.Printf("failed to connect to redis %v ,retrying in %v", err, baseDelay<<i)
+		time.Sleep(baseDelay << i) // exponential backoff
+	}
+	if err != nil {
+		fmt.Println("count not connect to redis")
+	}
+
 	err = rdb.Set(ctx, "presname", "murmu", 0).Err()
 	if err != nil {
 		log.Printf("error setting key %s\n", err)
@@ -45,13 +59,11 @@ func main() {
 	log.Println("over")
 	fmt.Println("over")
 
-	done:=make(chan bool)
+	done := make(chan bool)
 	go worker(done)
-	select{}
-	// <-done
-	// fmt.Println("last line")
+	select {}
 
 }
-func worker(ch chan bool){
+func worker(ch chan bool) {
 	fmt.Println("I am not done")
 }
