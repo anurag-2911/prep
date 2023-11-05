@@ -1,3 +1,19 @@
 2023/11/05 16:38:12 starting the application
 2023/11/05 16:38:29 error setting key dial tcp: lookup redis-service: no such host
 2023/11/05 16:38:41 error in getting vaalue  dial tcp: lookup redis-service: no such host
+2023/11/05 17:35:53 starting the application
+2023/11/05 17:36:06 error setting key dial tcp: lookup redis-service: no such host
+2023/11/05 17:36:15 error in getting vaalue  dial tcp: lookup redis-service: no such host
+2023/11/05 17:36:18 over
+2023/11/05 18:00:16 starting the application
+2023/11/05 18:00:26 error setting key dial tcp: lookup redis-service: no such host
+2023/11/05 18:00:35 error in getting vaalue  dial tcp: lookup redis-service: no such host
+2023/11/05 18:00:37 over
+2023/11/05 18:23:05 starting the application
+2023/11/05 18:23:14 error setting key dial tcp: lookup redis-service: no such host
+2023/11/05 18:23:23 error in getting vaalue  dial tcp: lookup redis-service: no such host
+2023/11/05 18:23:26 over
+2023/11/05 18:26:38 starting the application
+2023/11/05 18:26:47 error setting key dial tcp: lookup redis-service: no such host
+2023/11/05 18:26:56 error in getting vaalue  dial tcp: lookup redis-service: no such host
+2023/11/05 18:27:04 over

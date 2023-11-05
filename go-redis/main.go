@@ -44,4 +44,14 @@ func main() {
 	}
 	log.Println("over")
 	fmt.Println("over")
+
+	done:=make(chan bool)
+	go worker(done)
+	select{}
+	// <-done
+	// fmt.Println("last line")
+
+}
+func worker(ch chan bool){
+	fmt.Println("I am not done")
 }
