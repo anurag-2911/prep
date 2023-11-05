@@ -1,0 +1,3 @@
+2023/11/05 16:38:12 starting the application
+2023/11/05 16:38:29 error setting key dial tcp: lookup redis-service: no such host
+2023/11/05 16:38:41 error in getting vaalue  dial tcp: lookup redis-service: no such host
