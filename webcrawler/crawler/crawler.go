@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"sync"
 	"webcrawler/robots"
+	"webcrawler/urlverifier"
 	"webcrawler/useragent"
 )
 
@@ -20,9 +21,10 @@ type CrawlResult struct {
 }
 
 func CrawlURL(url string, wg *sync.WaitGroup, results chan<- CrawlResult) {
-	if robots.CanCrawl(url) {
-		defer wg.Done()
 
+	defer wg.Done()
+	url = urlverifier.EnsureHttpSchema(url)
+	if robots.CanCrawl(url) {
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
 			results <- CrawlResult{URL: url, Error: err}

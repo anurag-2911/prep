@@ -20,7 +20,8 @@ func fetchRobotstxt(targetURL string) (*robotstxt.RobotsData, error) {
 	if err != nil {
 		return nil, err
 	}
-	robotsTextURL := fmt.Sprintf("%s:%s/robots.txt", parsedURL.Scheme, parsedURL.Host)
+	robotsTextURL := fmt.Sprintf("%s://%s/robots.txt", parsedURL.Scheme, parsedURL.Host)
+	fmt.Println("robottext url ",robotsTextURL,parsedURL)
 	req, err := http.NewRequest("GET", robotsTextURL, nil)
 	if err != nil {
 		return nil, err

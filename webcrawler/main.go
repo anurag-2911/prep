@@ -8,9 +8,9 @@ import (
 
 func main() {
 	urls := []string{
-		"http://example.com",
-		"http://example.org",
-		"http://example.net",
+		"www.google.com",
+		"http://news.google.com",
+		
 	}
 	var wg sync.WaitGroup
 
