@@ -4,32 +4,29 @@ import (
 	"fmt"
 	"sync"
 	"webcrawler/crawler"
+	"webcrawler/requestratelimit"
 )
 
 func main() {
 	urls := []string{
 		"www.google.com",
 		"http://news.google.com",
-		
 	}
 	var wg sync.WaitGroup
 
 	results := make(chan crawler.CrawlResult, len(urls))
 
 	for _, url := range urls {
+		requestratelimit.HandleRateLimit(url)
 		wg.Add(1)
 		go crawler.CrawlURL(url, &wg, results)
 	}
 
 	//close the channel in the background
 	go func() {
-		fmt.Println("waiting for the go routines")
 		wg.Wait()
-		fmt.Println("closing the channels")
 		close(results)
-		fmt.Println("done closing the channels")
 	}()
-
 	//process results
 
 	for result := range results {
