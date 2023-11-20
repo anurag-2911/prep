@@ -2,7 +2,11 @@ package goroutines
 
 import (
 	"fmt"
+	"io"
+	"net/http"
+	"os"
 	"runtime"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -12,65 +16,63 @@ import (
 var counter int
 var mu sync.Mutex
 
-func TestAtomic(t *testing.T){
+func TestAtomic(t *testing.T) {
 	var counter int64
 	var wg sync.WaitGroup
 
-	for i:=0;i<100;i++{
+	for i := 0; i < 100; i++ {
 		wg.Add(1)
-		go func ()  {
+		go func() {
 			defer wg.Done()
-			atomic.AddInt64(&counter,1)
+			atomic.AddInt64(&counter, 1)
 		}()
 	}
 	wg.Wait()
-	fmt.Println("number of go routines executed ",counter)
+	fmt.Println("number of go routines executed ", counter)
 
-	
 }
-func TestClosingchannel(t *testing.T){
-	ch:=make(chan string,2)
-	ch<-"halo"
-	ch<-"hello"
+func TestClosingchannel(t *testing.T) {
+	ch := make(chan string, 2)
+	ch <- "halo"
+	ch <- "hello"
 	close(ch)
 	fmt.Println(<-ch)
 	fmt.Println(<-ch)
 	fmt.Println(<-ch)
-	ch<-"hola"
+	ch <- "hola"
 }
 
+func TestEmptyChannel(t *testing.T) {
+	ch := make(chan int, 0)
 
-func TestEmptyChannel(t *testing.T){
-	ch:=make(chan int,0)
-
-	go func ()  {
-		i:=<-ch
-		fmt.Println("value of i ",i)
+	go func() {
+		i := <-ch
+		fmt.Println("value of i ", i)
 	}()
 	// ch<-45
-	select{}
+	select {}
 }
-func TestPanic(t *testing.T){
+func TestPanic(t *testing.T) {
 	withpanic()
 	fmt.Println("after a panic")
 }
-func withpanic(){
-	defer func ()  {
-		if r:=recover();r!=nil{
-			fmt.Println("recovered from panic ",r)
+func withpanic() {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("recovered from panic ", r)
 		}
 	}()
 	panic("bhago bhago")
-	
+
 }
-func TestBufferedChannel(t *testing.T ){
-	ch:=make(chan string,2)
-	ch<-"hello"
-	ch<-"world"
+func TestBufferedChannel(t *testing.T) {
+	ch := make(chan string, 2)
+	ch <- "hello"
+	ch <- "world"
 	fmt.Println(<-ch)
 	fmt.Println(<-ch)
 	fmt.Println(<-ch)
-	ch<-"halo"
+	ch <- "halo"
 	fmt.Println("done sending")
 }
 
@@ -243,3 +245,125 @@ func TestWorkerPool(t *testing.T) {
 	}
 
 }
+
+func performSimpleTask(taskid int) {
+	fmt.Printf(" task started %d", taskid)
+	fmt.Print(" > ")
+	time.Sleep(2 * time.Second)
+	fmt.Println()
+	fmt.Printf(" task ended %d", taskid)
+	fmt.Print(" > ")
+}
+
+func runsimpleTask() {
+	for i := 0; i < 5; i++ {
+		go performSimpleTask(i)
+	}
+
+	time.Sleep(12 * time.Second)
+	fmt.Printf("all tasks are done\n")
+}
+
+func TestSimpleTask(t *testing.T) {
+	runsimpleTask()
+}
+
+func TestConcurrentPrimeNUmberFinder(t *testing.T) {
+	startTime := time.Now()
+	ConcurrentPrimeNumberFinder()
+	endtime := time.Since(startTime)
+	fmt.Println("time taken ", endtime)
+}
+func ConcurrentPrimeNumberFinder() {
+	start, end := 1, 10000
+	primes := make(chan int)
+	var wg sync.WaitGroup
+	for i := start; i <= end; i = i + 1000 {
+		wg.Add(1)
+		go findPrimes(i, i+999, &wg, primes)
+	}
+
+	go func() {
+		wg.Wait()
+		close(primes)
+	}()
+
+	count := 0
+	for prime := range primes {
+		fmt.Printf(" prime %d ", prime)
+		count++
+	}
+	fmt.Println("number of prime numbers ", count)
+}
+
+func isPrime(n int) bool {
+	if n <= 2 {
+		return true
+	}
+	for i := 2; i <= n/2; i++ {
+		if n%i == 0 {
+			return false
+		}
+	}
+	return true
+}
+func findPrimes(start int, end int, wg *sync.WaitGroup, primes chan<- int) {
+	defer wg.Done()
+	fmt.Println("find primes is called")
+	for num := start; num < end; num++ {
+		if isPrime(num) {
+			primes <- num
+		}
+	}
+}
+
+func TestCocurrentDownload(t *testing.T){
+	concurrentFileDownloader()
+}
+
+func concurrentFileDownloader() {
+	var wg sync.WaitGroup
+	urls := []string{
+		"http://example.com/file1.jpg",
+		"http://example.com/file2.jpg",
+	}
+	for _,url:=range urls{
+		wg.Add(1)
+		go downLoadFile(url,&wg)
+	}
+	wg.Wait()
+
+	fmt.Println("all files are downloaded")
+}
+func downLoadFile(url string, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Println("error ", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	out, err := os.Create("output_" + url[strings.LastIndex(url, "/")+1:])
+	if err != nil {
+		fmt.Println("error ", err)
+		return
+	}
+
+	defer out.Close()
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		fmt.Println("error ", err)
+		return
+	}
+
+	fmt.Println("downloaded ", url)
+
+}
+
+func countWords(filePath string){
+	
+}
+
+// log message processor
